@@ -1,10 +1,13 @@
-const { Client, GatewayIntentBits } = require('discord.js-selfbot-v13');
+process.env.WERIFT_LOG_LEVEL = 'none';
+
+const { Client } = require('discord.js-selfbot-v13');
 
 const client = new Client({
+  voice: false,
+  voiceStateUpdateInterval: 0,
   checkUpdate: false,
-  syncStatus: true,
-  autoUpdate: false,
-  intents: [GatewayIntentBits.Guilds]
+  syncStatus: false,
+  autoUpdate: false
 });
 
 client.on('ready', () => {
