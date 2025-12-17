@@ -5,7 +5,7 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "selfcord": "^4.5.2"
-  }
+    "discord.js-selfbot-v13": "2.18.0"
+  },
+  "packageManager": "npm@10.0.0"
 }
-
