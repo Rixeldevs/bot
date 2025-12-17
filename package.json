@@ -2,12 +2,13 @@
   "name": "selfbot",
   "version": "1.0.0",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "build": "echo 'No build step needed'"
   },
   "dependencies": {
     "ws": "^8.14.2"
   },
   "engines": {
-    "node": "22.x"
+    "node": ">=20.0.0"
   }
 }
