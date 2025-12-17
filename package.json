@@ -1,13 +1,9 @@
 {
-  "name": "stealth-selfbot",
-  "version": "1.0.0",
+  "name": "selfbot",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
-    "discord.js-selfbot-v13": "latest"
-  },
-  "engines": {
-    "node": "18.x"
+    "ws": "^8.14.2"
   }
 }
