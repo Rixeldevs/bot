@@ -1,4 +1,4 @@
-const { Client } = require('selfcord');
+const { Client } = require('discord.js-selfbot-v13');
 const client = new Client();
 
 client.on('ready', () => {
@@ -6,4 +6,3 @@ client.on('ready', () => {
 });
 
 client.login(process.env.TOKEN);
-
