@@ -1,8 +1,9 @@
-const { Client } = require('discord.js-selfbot-v13');
+const { Client } = require('selfcord');
 const client = new Client();
 
-client.on('ready', async () => {
+client.on('ready', () => {
   console.log(`${client.user.username} is ready!`);
 });
 
 client.login(process.env.TOKEN);
+
