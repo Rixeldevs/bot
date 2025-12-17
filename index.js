@@ -1,17 +1,40 @@
-process.env.WERIFT_LOG_LEVEL = 'none';
+const WebSocket = require('ws');
 
-const { Client } = require('discord.js-selfbot-v13');
+const token = process.env.TOKEN;
 
-const client = new Client({
-  voice: false,
-  voiceStateUpdateInterval: 0,
-  checkUpdate: false,
-  syncStatus: false,
-  autoUpdate: false
+if (!token) {
+  console.log('ERROR: Set TOKEN in Environment Variables');
+  process.exit(1);
+}
+
+const ws = new WebSocket('wss://gateway.discord.gg/?v=10&encoding=json');
+
+ws.on('open', () => {
+  ws.send(JSON.stringify({
+    op: 2,
+    d: {
+      token: token,
+      properties: {
+        $os: "linux",
+        $browser: "Chrome",
+        $device: "Chrome"
+      },
+      presence: { status: "online" }
+    }
+  }));
+  console.log('Connected!');
 });
 
-client.on('ready', () => {
-  console.log(`${client.user.username} is ready!`);
+ws.on('message', data => {
+  try {
+    const packet = JSON.parse(data);
+    if (packet.op === 10) {
+      ws.send(JSON.stringify({ op: 11, d: 1073741824 }));
+    }
+  } catch (e) {}
 });
 
-client.login(process.env.TOKEN);
+ws.on('close', () => {
+  console.log('Disconnected - reconnecting...');
+  setTimeout(() => require('child_process').spawn(process.argv[0], process.argv.slice(1), { stdio: 'inherit' }), 5000);
+});
