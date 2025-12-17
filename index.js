@@ -1,9 +1,8 @@
 const WebSocket = require('ws');
-
 const token = process.env.TOKEN;
 
 if (!token) {
-  console.log('ERROR: Set TOKEN in Environment Variables');
+  console.log('ERROR: TOKEN env var missing');
   process.exit(1);
 }
 
@@ -14,27 +13,18 @@ ws.on('open', () => {
     op: 2,
     d: {
       token: token,
-      properties: {
-        $os: "linux",
-        $browser: "Chrome",
-        $device: "Chrome"
-      },
+      properties: { $os: "linux", $browser: "Chrome", $device: "Chrome" },
       presence: { status: "online" }
     }
   }));
-  console.log('Connected!');
+  console.log('✅ Selfbot online!');
 });
 
 ws.on('message', data => {
   try {
     const packet = JSON.parse(data);
-    if (packet.op === 10) {
-      ws.send(JSON.stringify({ op: 11, d: 1073741824 }));
-    }
-  } catch (e) {}
+    if (packet.op === 10) ws.send(JSON.stringify({ op: 11, d: 1073741824 }));
+  } catch {}
 });
 
-ws.on('close', () => {
-  console.log('Disconnected - reconnecting...');
-  setTimeout(() => require('child_process').spawn(process.argv[0], process.argv.slice(1), { stdio: 'inherit' }), 5000);
-});
+ws.on('close', () => setTimeout(() => process.exit(1), 5000));
