@@ -9,8 +9,12 @@ const app = express();
 app.get('/', (req, res) => res.send('alive'));
 app.listen(process.env.PORT || 5000, () => console.log('Web OK'));
 
-let heartbeatInterval;
+let heartbeatTimer = null;
+
 const connect = () => {
+  // Clear old heartbeat
+  if (heartbeatTimer) clearInterval(heartbeatTimer);
+  
   const ws = new WebSocket('wss://gateway.discord.gg/?v=10&encoding=json');
   
   ws.on('open', () => {
@@ -29,8 +33,12 @@ const connect = () => {
     try {
       const packet = JSON.parse(data.toString());
       if (packet.op === 10) {
-        heartbeatInterval = packet.d.heartbeat_interval;
-        setInterval(() => ws.ping(), heartbeatInterval);
+        const interval = packet.d.heartbeat_interval;
+        heartbeatTimer = setInterval(() => {
+          if (ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify({ op: 1, d: null })); // Proper heartbeat
+          }
+        }, interval);
         console.log('❤️ Heartbeat started');
       }
     } catch {}
